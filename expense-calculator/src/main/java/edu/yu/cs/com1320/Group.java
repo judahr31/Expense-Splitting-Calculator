@@ -11,7 +11,7 @@ public class Group {
     public Group(int groupId, String groupName){
         this.id = groupId;
         this.name = groupName;
-        this.memebers = new HashMap<>();
+        this.members = new HashMap<>();
         this.expenseHistory = new ArrayList<>();
 
     }
@@ -21,7 +21,7 @@ public class Group {
     }
 
     protected void addMember(Integer id, User user){
-        this.memebrs.put(id, user);
+        this.members.put(id, user);
     }
 
     protected void addExpense(Expense exp){
@@ -36,7 +36,7 @@ public class Group {
         return this.name;
     }
 
-    protected Map<String, User> getMembers(){
+    protected Map<Integer, User> getMembers(){
         return this.members;
     }
 
