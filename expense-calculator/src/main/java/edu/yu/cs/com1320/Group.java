@@ -10,19 +10,19 @@ public class Group {
     private String name;
     private Map<Integer, User> members;
     private List<Expense> expenseHistory;
+    private Map<Integer, Map<Integer, Double>> debtGraph;
 
     public Group(int groupId, String groupName){
         this.id = groupId;
         this.name = groupName;
         this.members = new HashMap<>();
         this.expenseHistory = new ArrayList<>();
-
+        // Represents a Directed Graph of debts:
+        // Map of (Debtor ID -> Map of (Creditor ID -> Amount Owed))
+        // Outer Map represents the vertex (User) and Inner map the edge (Debt)
+        this.debtGraph = new HashMap<>();
     }
 
-    // Represents a Directed Graph of debts:
-    // Map of (Debtor ID -> Map of (Creditor ID -> Amount Owed))
-    // Outer Map represents the vertex (User) and Inner map the edge (Debt)
-    private Map<Integer, Map<Integer, Double>> debtGraph;
 
     
 
