@@ -19,6 +19,10 @@ public class User {
         return this.name;
     }
 
+    protected void setName(String name) {
+        this.name = name;
+    }
+
     protected void setNetBalance(double netBalance){
         this.netBalance = netBalance;
     }

@@ -19,31 +19,31 @@ public class Expense {
         this.participants = new ArrayList<>();
     }
 
-    public int getExpenseID() {
+    protected int getExpenseID() {
         return this.expenseId;
     }
 
-    public void setDescription(String des) {
+    protected void setDescription(String des) {
         this.description = des;
     }
 
-    public String getDescription() {
+    protected String getDescription() {
         return this.description;
     }
 
-    public void setTotalAmount(double amt) {
+    protected void setTotalAmount(double amt) {
         this.totalAmount = amt;
     }
 
-    public double getTotalAmount() {
+    protected double getTotalAmount() {
         return this.totalAmount;
     }
 
-    public List<User> getParticipants() {
+    protected List<User> getParticipants() {
         return new ArrayList<>(this.participants);
     }
 
-    public void addUser(User user) {
+    protected void addUser(User user) {
         this.participants.add(user);
     }
 }
