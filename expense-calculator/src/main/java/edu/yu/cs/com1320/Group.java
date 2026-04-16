@@ -1,6 +1,9 @@
 package edu.yu.cs.com1320;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Group {
     private int id;
@@ -11,7 +14,7 @@ public class Group {
     public Group(int groupId, String groupName){
         this.id = groupId;
         this.name = groupName;
-        this.memebers = new HashMap<>();
+        this.members = new HashMap<>();
         this.expenseHistory = new ArrayList<>();
 
     }
@@ -21,7 +24,7 @@ public class Group {
     }
 
     protected void addMember(Integer id, User user){
-        this.memebrs.put(id, user);
+        this.members.put(id, user);
     }
 
     protected void addExpense(Expense exp){
@@ -36,7 +39,7 @@ public class Group {
         return this.name;
     }
 
-    protected Map<String, User> getMembers(){
+    protected Map<Integer, User> getMembers(){
         return this.members;
     }
 
