@@ -1,6 +1,9 @@
 package edu.yu.cs.com1320;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Group {
     private int id;
@@ -18,6 +21,7 @@ public class Group {
 
     // Represents a Directed Graph of debts:
     // Map of (Debtor ID -> Map of (Creditor ID -> Amount Owed))
+    // Outer Map represents the vertex (User) and Inner map the edge (Debt)
     private Map<Integer, Map<Integer, Double>> debtGraph;
 
     
@@ -49,5 +53,4 @@ public class Group {
     protected List<Expense> getExpenseHistory(){
         return this.expenseHistory;
     }
-
 }
