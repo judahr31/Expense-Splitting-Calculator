@@ -19,7 +19,7 @@ public class User {
         return this.name;
     }
 
-    protected double setNetBalance(double netBalance){
+    protected void setNetBalance(double netBalance){
         this.netBalance = netBalance;
     }
 
