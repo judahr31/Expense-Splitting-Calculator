@@ -5,7 +5,7 @@ import java.util.*;
 public class Group {
     private int id;
     private String name;
-    private Map<String, User> members;
+    private Map<Integer, User> members;
     private List<Expense> expenseHistory;
 
     public Group(int groupId, String groupName){
@@ -20,8 +20,8 @@ public class Group {
         this.name = name;
     }
 
-    protected void addMember(String name, User user){
-        this.memebrs.put(name, user);
+    protected void addMember(Integer id, User user){
+        this.memebrs.put(id, user);
     }
 
     protected void addExpense(Expense exp){
