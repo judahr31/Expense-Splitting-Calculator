@@ -16,6 +16,12 @@ public class Group {
 
     }
 
+    // Represents a Directed Graph of debts:
+    // Map of (Debtor ID -> Map of (Creditor ID -> Amount Owed))
+    private Map<Integer, Map<Integer, Double>> debtGraph;
+
+    
+
     protected void setName(String name){
         this.name = name;
     }
@@ -43,8 +49,5 @@ public class Group {
     protected List<Expense> getExpenseHistory(){
         return this.expenseHistory;
     }
-    // Represents a Directed Graph of debts:
-    // Map of (Debtor ID -> Map of (Creditor ID -> Amount Owed))
-    private Map<String, Map<String, Double>> debtGraph;
-    // Getters and Setters...
+
 }
