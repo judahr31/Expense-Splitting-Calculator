@@ -12,14 +12,14 @@ public class User {
     }
 
     protected int getId(){
-        return this.id:
+        return this.id;
     }
 
     protected String getName(){
         return this.name;
     }
 
-    protected double setNetBalance(double netBalance){
+    protected void setNetBalance(double netBalance){
         this.netBalance = netBalance;
     }
 
