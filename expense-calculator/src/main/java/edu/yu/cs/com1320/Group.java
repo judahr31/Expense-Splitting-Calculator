@@ -10,7 +10,7 @@ public class Group {
     private String name;
     private Map<Integer, User> members;
     private List<Expense> expenseHistory;
-    private Map<Integer, Map<Integer, Double>> debtGraph;
+    private Map<User, Map<User, Double>> debtGraph;
 
     public Group(int groupId, String groupName){
         this.id = groupId;
@@ -22,9 +22,19 @@ public class Group {
         // Outer Map represents the vertex (User) and Inner map the edge (Debt)
         this.debtGraph = new HashMap<>();
     }
+ 
+    protected void setDebts(Integer creditor, int amount){
+        /*
+        this should call a split calculator method that 
+        determines how much each person owes and to who
+        the split calculator method would return a map 
+        with only one key and value which is the creditor 
+        id (key) and owed amount (value)
 
-
-    
+        then we just populate the setDebts with the debtors ID
+        and the value of the id is the map from the split calculator method
+         */
+    }
 
     protected void setName(String name){
         this.name = name;
