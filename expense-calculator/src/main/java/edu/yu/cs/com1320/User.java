@@ -12,7 +12,7 @@ public class User {
     }
 
     protected int getId(){
-        return this.id:
+        return this.id;
     }
 
     protected String getName(){
