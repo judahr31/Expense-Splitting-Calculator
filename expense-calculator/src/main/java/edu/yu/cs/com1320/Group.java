@@ -48,6 +48,7 @@ public class Group {
     }
     // Represents a Directed Graph of debts:
     // Map of (Debtor ID -> Map of (Creditor ID -> Amount Owed))
-    private Map<String, Map<String, Double>> debtGraph;
+    // Outer Map represents the vertex (User) and Inner map the edge (Debt)
+    private Map<Integer, Map<Integer, Double>> debtGraph;
     // Getters and Setters...
 }
