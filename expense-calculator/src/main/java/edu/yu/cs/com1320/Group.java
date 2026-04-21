@@ -20,32 +20,16 @@ public class Group {
         this.expenseHistory = new ArrayList<>();
     }
 
-    /**
-     * Logs an expense and immediately updates the net balances of everyone involved.
-     * 
-     * @expense represents the total amount paid on the build
-     */
     public void addExpense(Expense expense) {
-        // TODO: 1. Add the expense to the expenseHistory list
         this.expenseHistory.add(expense);
+        double splitAmount = expense.getTotalAmount()/((double)expense.getParticipants().size());
+        expense.getPayer().setNetBalance( ((splitAmount) * (expense.getParticipants().size() - 1 )) );
 
-        // TODO: 2. Calculate the split amount (total / number of participants)
-        double splitAmount = expense.getTotalAmount()/((double)expense.getParticipants().length());
-
-        // TODO: 3. Credit the payer's net balance (add the total amount)
-        expense.getPayer().setNetBalance( ((splitAmount) * (expense.getParticipants().length() - 1 )) );
-
-        // TODO: 4. Debit everyone in the split (subtract the split amount from their balance)
         for (User u : expense.getParticipants()){
             u.setNetBalance(-1*(splitAmount));
         }
     }
 
-    /**
-     * The core algorithm: Matches debtors to creditors using Priority Queues 
-     * to minimize the total number of transactions.
-     * * @return A list of instructions (Debts) to settle all accounts.
-     */
     public List<Debt> calculateSettlement() {
         List<Debt> settlements = new ArrayList<>();
 
@@ -56,19 +40,28 @@ public class Group {
             debtorHeap.add(entry.getValue());
         }
 
-        while (creditorHeap.isEmpty() || debtorHeap.isEmpty()) {
+        while (creditorHeap.isEmpty() && debtorHeap.isEmpty()) {
+            User creditor = creditorHeap.poll();
+            User debtor = debtorHeap.poll();
+           
+            double creditAmt = creditor.getNetBalance();
+            double debtAmt = Math.abs(debtor.getNetBalance());
             
+            double settleAmount = Math.min(creditAmt, debtAmt);
+            double roundedAmount = Math.round(settleAmount * 100.0) / 100.0;
+            settlements.add(new Debt(debtor, creditor, roundedAmount));
+
+            creditor.setNetBalance(creditAmt - settleAmount);
+            debtor.setNetBalance(debtor.getNetBalance() + settleAmount);
+
+            if (creditor.getNetBalance() > 0.01) {
+                creditorHeap.add(creditor);
+            }
+            if (debtor.getNetBalance() < -0.01) {
+                debtorHeap.add(debtor);
+            }
         }
-
-
-        // TODO: 1. Create a Max-Heap for creditors (users with positive balance)
-        // TODO: 2. Create a Max-Heap for debtors (users with negative balance)
-        // TODO: 3. Populate both heaps by iterating through this.members.values()
-        // TODO: 4. Create a while loop that runs until one or both heaps are empty
-        // TODO: 5. Inside the loop, pop the top of both heaps, find the min amount, 
-        //          create a Debt object, update balances, and push them back if they still have a balance.
-
-        return settlements; // Returns the generated list of instructions
+        return settlements;
     }
 
     protected void setName(String name){
