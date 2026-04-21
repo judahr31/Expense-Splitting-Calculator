@@ -3,7 +3,7 @@ package edu.yu.cs.com1320;
 import java.util.ArrayList;
 import java.util.List;
 
-
+// currently the expense class expects equal portion of payment. Maybe we can add partial payment?
 public class Expense {
     private final int expenseId;
     private String description;
