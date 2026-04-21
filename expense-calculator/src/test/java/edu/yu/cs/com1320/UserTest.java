@@ -34,8 +34,10 @@ public class UserTest {
     }
 
     @Test
-    public void testSetNetBalance() {
-        this.user.setNetBalance(100);
+    public void testUpdateNetBalance() {
+        this.user.updateNetBalance(100);
         assertEquals(user.getNetBalance(), 100);
+        this.user.updateNetBalance(100);
+        assertEquals(user.getNetBalance(), 200);
     }
 }
