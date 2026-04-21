@@ -1,6 +1,6 @@
 package edu.yu.cs.com1320;
 
-public class User {
+public class User implements Comparable<User> {
     private int id;
     private String name;
     private double netBalance;
@@ -29,5 +29,10 @@ public class User {
 
     protected double getNetBalance(){
         return this.netBalance;
+    }
+
+    @Override
+    public int compareTo(User other) {
+        return Double.compare(this.netBalance, other.netBalance);
     }
 }

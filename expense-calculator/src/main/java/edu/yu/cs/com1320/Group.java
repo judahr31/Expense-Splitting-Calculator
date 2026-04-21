@@ -1,9 +1,11 @@
 package edu.yu.cs.com1320;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 public class Group {
     private int id;
@@ -46,6 +48,18 @@ public class Group {
      */
     public List<Debt> calculateSettlement() {
         List<Debt> settlements = new ArrayList<>();
+
+        PriorityQueue<User> creditorHeap = new PriorityQueue<>(Collections.reverseOrder()); // max heap
+        PriorityQueue<User> debtorHeap = new PriorityQueue<>(); // min heap
+        for (Map.Entry<Integer, User> entry : this.getMembers().entrySet()) {
+            creditorHeap.add(entry.getValue());
+            debtorHeap.add(entry.getValue());
+        }
+
+        while (creditorHeap.isEmpty() || debtorHeap.isEmpty()) {
+            
+        }
+
 
         // TODO: 1. Create a Max-Heap for creditors (users with positive balance)
         // TODO: 2. Create a Max-Heap for debtors (users with negative balance)
