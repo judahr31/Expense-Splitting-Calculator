@@ -24,7 +24,7 @@ public class User {
     }
 
     protected void setNetBalance(double netBalance){
-        this.netBalance = netBalance;
+        this.netBalance += netBalance;
     }
 
     protected double getNetBalance(){

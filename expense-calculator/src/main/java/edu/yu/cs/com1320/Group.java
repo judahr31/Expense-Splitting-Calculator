@@ -20,12 +20,23 @@ public class Group {
 
     /**
      * Logs an expense and immediately updates the net balances of everyone involved.
+     * 
+     * @expense represents the total amount paid on the build
      */
     public void addExpense(Expense expense) {
         // TODO: 1. Add the expense to the expenseHistory list
+        this.expenseHistory.add(expense);
+
         // TODO: 2. Calculate the split amount (total / number of participants)
+        double splitAmount = expense.getTotalAmount()/((double)expense.getParticipants().length());
+
         // TODO: 3. Credit the payer's net balance (add the total amount)
+        expense.getPayer().setNetBalance( ((splitAmount) * (expense.getParticipants().length() - 1 )) );
+
         // TODO: 4. Debit everyone in the split (subtract the split amount from their balance)
+        for (User u : expense.getParticipants()){
+            u.setNetBalance(-1*(splitAmount));
+        }
     }
 
     /**
