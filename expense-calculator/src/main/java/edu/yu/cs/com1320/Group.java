@@ -35,26 +35,33 @@ public class Group {
     public List<Debt> calculateSettlement() {
         List<Debt> settlements = new ArrayList<>();
 
-        PriorityQueue<User> creditorHeap = new PriorityQueue<>(Collections.reverseOrder()); // max heap
-        PriorityQueue<User> debtorHeap = new PriorityQueue<>(); // min heap
-        for (Map.Entry<Integer, User> entry : this.getMembers().entrySet()) {
-            creditorHeap.add(entry.getValue());
-            debtorHeap.add(entry.getValue());
+        PriorityQueue<User> creditorHeap = new PriorityQueue<>(Collections.reverseOrder()); 
+        PriorityQueue<User> debtorHeap = new PriorityQueue<>(); 
+
+        for (User user : this.members.values()) {
+            if (user.getNetBalance() > 0.01) {
+                creditorHeap.add(user);
+            } else if (user.getNetBalance() < -0.01) {
+                debtorHeap.add(user);
+            }
         }
 
         while (!creditorHeap.isEmpty() && !debtorHeap.isEmpty()) {
             User creditor = creditorHeap.poll();
             User debtor = debtorHeap.poll();
-           
+        
             double creditAmt = creditor.getNetBalance();
             double debtAmt = Math.abs(debtor.getNetBalance());
             
             double settleAmount = Math.min(creditAmt, debtAmt);
             double roundedAmount = Math.round(settleAmount * 100.0) / 100.0;
-            settlements.add(new Debt(debtor, creditor, roundedAmount));
+            
+            if (roundedAmount > 0) {
+                settlements.add(new Debt(debtor, creditor, roundedAmount));
+            }
 
-            creditor.updateNetBalance(creditAmt - settleAmount);
-            debtor.updateNetBalance(debtor.getNetBalance() + settleAmount);
+            creditor.updateNetBalance(-settleAmount); 
+            debtor.updateNetBalance(settleAmount);
 
             if (creditor.getNetBalance() > 0.01) {
                 creditorHeap.add(creditor);
