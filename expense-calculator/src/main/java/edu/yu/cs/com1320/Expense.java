@@ -23,6 +23,10 @@ public class Expense {
         return this.expenseId;
     }
 
+    protected User getPayer() {
+        return this.payer;
+    }
+
     protected void setDescription(String des) {
         this.description = des;
     }
