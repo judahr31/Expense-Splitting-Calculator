@@ -25,7 +25,6 @@ public class ExpenseTest {
         this.expense = new Expense("Dinner at Joe's", 120.00, this.payer, 1001);
         
         // Add participants using your addUser method
-        this.expense.addUser(this.payer);
         this.expense.addUser(this.participant1);
         this.expense.addUser(this.participant2);
     }

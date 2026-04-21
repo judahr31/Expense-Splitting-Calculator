@@ -1,2 +1,7 @@
 expense-calculator/target/classes/edu/yu/cs/com1320/*.class
 expense-calculator/target/test-classes/edu/yu/cs/com1320/*.class
+expense-calculator/target/maven-status/maven-compiler-plugin/compile/default-compile/*.lst
+expense-calculator/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/*.lst
+expense-calculator/target/surefire-reports/edu.yu.cs.com1320.ExpenseTest.txt
+expense-calculator/target/surefire-reports/*.dump
+expense-calculator/target/surefire-reports/TEST-edu.yu.cs.com1320.ExpenseTest.xml
