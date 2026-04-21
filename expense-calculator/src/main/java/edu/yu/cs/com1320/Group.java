@@ -23,10 +23,12 @@ public class Group {
     public void addExpense(Expense expense) {
         this.expenseHistory.add(expense);
         double splitAmount = expense.getTotalAmount()/((double)expense.getParticipants().size());
-        expense.getPayer().setNetBalance( ((splitAmount) * (expense.getParticipants().size() - 1 )) );
+        expense.getPayer().updateNetBalance(expense.getTotalAmount() - splitAmount);
 
         for (User u : expense.getParticipants()){
-            u.setNetBalance(-1*(splitAmount));
+            if (!u.equals(expense.getPayer())) {
+                u.updateNetBalance(-1*(splitAmount));
+            }
         }
     }
 
@@ -40,7 +42,7 @@ public class Group {
             debtorHeap.add(entry.getValue());
         }
 
-        while (creditorHeap.isEmpty() && debtorHeap.isEmpty()) {
+        while (!creditorHeap.isEmpty() && !debtorHeap.isEmpty()) {
             User creditor = creditorHeap.poll();
             User debtor = debtorHeap.poll();
            
@@ -51,8 +53,8 @@ public class Group {
             double roundedAmount = Math.round(settleAmount * 100.0) / 100.0;
             settlements.add(new Debt(debtor, creditor, roundedAmount));
 
-            creditor.setNetBalance(creditAmt - settleAmount);
-            debtor.setNetBalance(debtor.getNetBalance() + settleAmount);
+            creditor.updateNetBalance(creditAmt - settleAmount);
+            debtor.updateNetBalance(debtor.getNetBalance() + settleAmount);
 
             if (creditor.getNetBalance() > 0.01) {
                 creditorHeap.add(creditor);

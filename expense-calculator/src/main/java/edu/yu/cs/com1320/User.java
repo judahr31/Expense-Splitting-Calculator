@@ -23,12 +23,27 @@ public class User implements Comparable<User> {
         this.name = name;
     }
 
-    protected void setNetBalance(double netBalance){
+    protected void updateNetBalance(double netBalance){
         this.netBalance += netBalance;
     }
 
     protected double getNetBalance(){
         return this.netBalance;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(id);
     }
 
     @Override

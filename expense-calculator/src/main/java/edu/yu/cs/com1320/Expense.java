@@ -17,6 +17,7 @@ public class Expense {
         this.payer = payer;
         this.expenseId = expId;
         this.participants = new ArrayList<>();
+        this.participants.add(payer);
     }
 
     protected int getExpenseID() {
