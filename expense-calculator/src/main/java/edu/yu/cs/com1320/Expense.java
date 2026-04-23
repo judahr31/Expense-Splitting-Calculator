@@ -49,6 +49,8 @@ public class Expense {
     }
 
     protected void addUser(User user) {
-        this.participants.add(user);
+        if (!this.participants.contains(user)) {
+            this.participants.add(user);
+        }
     }
 }
