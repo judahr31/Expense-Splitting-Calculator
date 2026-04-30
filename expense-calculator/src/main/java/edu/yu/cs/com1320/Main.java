@@ -70,7 +70,6 @@ public class Main {
                 continue;
             }
 
-            // --- NEW: DUPLICATE GROUP NAME CHECK ---
             boolean exists = false;
             for (Group g : groups.values()) {
                 if (g.getName().equalsIgnoreCase(name)) {
@@ -82,7 +81,7 @@ public class Main {
             if (exists) {
                 System.out.println("Error: A group with the name '" + name + "' already exists. Please choose a unique name.");
             } else {
-                break; // Valid, unique name found
+                break; 
             }
         }
         groups.put(groupCount, new Group(groupCount, name));
@@ -138,10 +137,11 @@ public class Main {
         while (!back) {
             System.out.println("--- MANAGING GROUP: " + selectedGroup.getName() + " ---");
             System.out.println("1. Add/View Users");
-            System.out.println("2. Remove a User"); // NEW MENU OPTION
+            System.out.println("2. Remove a User");
             System.out.println("3. Log Expense");
-            System.out.println("4. Calculate Settlement");
-            System.out.println("5. Back to Main Menu");
+            System.out.println("4. View/Delete Expenses"); // NEW MENU OPTION
+            System.out.println("5. Calculate Settlement");
+            System.out.println("6. Back to Main Menu");
             System.out.print("Selection: ");
             String choice = scanner.nextLine().trim();
 
@@ -149,12 +149,13 @@ public class Main {
 
             switch (choice) {
                 case "1": manageUsers(selectedGroup); break;
-                case "2": removeUser(selectedGroup); break; // NEW METHOD CALL
+                case "2": removeUser(selectedGroup); break; 
                 case "3": logExpenseInGroup(selectedGroup); break;
-                case "4": runSettlement(selectedGroup); break;
-                case "5": back = true; break;
+                case "4": manageExpenses(selectedGroup); break; // NEW METHOD CALL
+                case "5": runSettlement(selectedGroup); break;
+                case "6": back = true; break;
                 default: 
-                    System.out.println("Invalid choice. Please enter a number from 1 to 5.\n");
+                    System.out.println("Invalid choice. Please enter a number from 1 to 6.\n");
             }
         }
     }
@@ -185,7 +186,6 @@ public class Main {
                         continue;
                     }
 
-                    // --- NEW: DUPLICATE USER NAME CHECK ---
                     boolean exists = false;
                     for (User u : g.getMembers().values()) {
                         if (u.getName().equalsIgnoreCase(name)) {
@@ -197,7 +197,7 @@ public class Main {
                     if (exists) {
                         System.out.println("Error: A user named '" + name + "' is already in this group. Please use a unique name or initial.");
                     } else {
-                        break; // Valid, unique name
+                        break; 
                     }
                 }
                 g.addMember(userCount, new User(userCount, name));
@@ -374,6 +374,47 @@ public class Main {
         g.addExpense(ex);
         clearScreen(); 
         System.out.println("SUCCESS: Expense logged successfully!\n");
+    }
+
+    private static void manageExpenses(Group g) {
+        System.out.println("--- Expense History ---");
+        List<Expense> history = g.getExpenseHistory();
+        
+        if (history.isEmpty()) {
+            System.out.println(" (No expenses logged)\n");
+            return;
+        }
+
+        for (int i = 0; i < history.size(); i++) {
+            Expense ex = history.get(i);
+            System.out.printf("%d. %s | $%.2f paid by %s%n", 
+                (i + 1), ex.getDescription(), ex.getTotalAmount(), ex.getPayer().getName());
+        }
+        System.out.println("-----------------------\n");
+
+        System.out.print("Enter the number of the expense to delete (or 'b' to go back): ");
+        String input = scanner.nextLine().trim();
+
+        if (input.equalsIgnoreCase("b")) {
+            clearScreen();
+            return;
+        }
+
+        try {
+            int index = Integer.parseInt(input) - 1;
+            if (index >= 0 && index < history.size()) {
+                Expense toRemove = history.get(index);
+                g.removeExpense(toRemove);
+                clearScreen();
+                System.out.println("SUCCESS: Expense '" + toRemove.getDescription() + "' deleted and balances safely adjusted.\n");
+            } else {
+                clearScreen();
+                System.out.println("Error: Invalid expense number. Please enter a number from the list.\n");
+            }
+        } catch (NumberFormatException e) {
+            clearScreen();
+            System.out.println("Error: Invalid input. Please enter a numeric value.\n");
+        }
     }
 
     private static void runSettlement(Group g) {

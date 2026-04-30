@@ -32,6 +32,30 @@ public class Group {
         }
     }
 
+    public void removeExpense(Expense expense) {
+        if (this.expenseHistory.remove(expense)) {
+            List<User> participants = expense.getParticipants();
+            if (participants.isEmpty()) return;
+
+            User payer = expense.getPayer();
+            double total = expense.getTotalAmount();
+
+            int totalCents = (int) Math.round(total * 100);
+            int numPeople = participants.size();
+
+            int baseCentsPerPerson = totalCents / numPeople;
+            int leftoverPennies = totalCents % numPeople;
+
+            payer.updateNetBalance(-total);
+
+            for (int i = 0; i < numPeople; i++) {
+                User u = participants.get(i);
+                int centsToCharge = baseCentsPerPerson + (i < leftoverPennies ? 1 : 0);
+                u.updateNetBalance(centsToCharge / 100.0);
+            }
+        }
+    }
+
     public List<Debt> calculateSettlement() {
         List<Debt> settlements = new ArrayList<>();
 
