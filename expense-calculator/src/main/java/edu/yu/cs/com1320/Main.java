@@ -13,12 +13,12 @@ public class Main {
 
     public static void main(String[] args) {
         boolean running = true;
-        clearScreen(); // Initial clear when app starts
+        clearScreen(); 
         
         while (running) {
             printMainMenu();
             String choice = scanner.nextLine().trim();
-            clearScreen(); // Clear the screen right after they hit enter!
+            clearScreen(); 
             
             switch (choice) {
                 case "1": createGroup(); break;
@@ -33,8 +33,6 @@ public class Main {
         System.out.println("Goodbye!");
     }
 
-    // --- UI HELPERS ---
-
     private static void clearScreen() {
         try {
             if (System.getProperty("os.name").toLowerCase().contains("windows")) {
@@ -48,8 +46,6 @@ public class Main {
         }
     }
 
-    // --- APPLICATION LOGIC ---
-
     private static void printMainMenu() {
         System.out.println("=== SYSTEM OVERVIEW ===");
         System.out.println("1. Create New Group");
@@ -62,15 +58,36 @@ public class Main {
     private static void createGroup() {
         String name;
         while (true) {
-            System.out.print("Enter Group Name: ");
+            System.out.print("Enter Group Name (or 'b' to cancel): ");
             name = scanner.nextLine().trim();
-            if (!name.isEmpty()) {
-                break;
+            
+            if (name.equalsIgnoreCase("b")) {
+                clearScreen();
+                return;
             }
-            System.out.println("Group name cannot be empty. Please try again.");
+            if (name.isEmpty()) {
+                System.out.println("Group name cannot be empty. Please try again.");
+                continue;
+            }
+
+            // --- NEW: DUPLICATE GROUP NAME CHECK ---
+            boolean exists = false;
+            for (Group g : groups.values()) {
+                if (g.getName().equalsIgnoreCase(name)) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (exists) {
+                System.out.println("Error: A group with the name '" + name + "' already exists. Please choose a unique name.");
+            } else {
+                break; // Valid, unique name found
+            }
         }
         groups.put(groupCount, new Group(groupCount, name));
-        System.out.println("\nSUCCESS: Group '" + name + "' created with ID: " + groupCount + "\n");
+        clearScreen();
+        System.out.println("SUCCESS: Group '" + name + "' created with ID: " + groupCount + "\n");
         groupCount++;
     }
 
@@ -116,26 +133,28 @@ public class Main {
         }
 
         boolean back = false;
-        clearScreen(); // Clear before entering the sub-menu
+        clearScreen(); 
         
         while (!back) {
             System.out.println("--- MANAGING GROUP: " + selectedGroup.getName() + " ---");
             System.out.println("1. Add/View Users");
-            System.out.println("2. Log Expense");
-            System.out.println("3. Calculate Settlement");
-            System.out.println("4. Back to Main Menu");
+            System.out.println("2. Remove a User"); // NEW MENU OPTION
+            System.out.println("3. Log Expense");
+            System.out.println("4. Calculate Settlement");
+            System.out.println("5. Back to Main Menu");
             System.out.print("Selection: ");
             String choice = scanner.nextLine().trim();
 
-            clearScreen(); // Clear right after they make a selection in the sub-menu!
+            clearScreen(); 
 
             switch (choice) {
                 case "1": manageUsers(selectedGroup); break;
-                case "2": logExpenseInGroup(selectedGroup); break;
-                case "3": runSettlement(selectedGroup); break;
-                case "4": back = true; break;
+                case "2": removeUser(selectedGroup); break; // NEW METHOD CALL
+                case "3": logExpenseInGroup(selectedGroup); break;
+                case "4": runSettlement(selectedGroup); break;
+                case "5": back = true; break;
                 default: 
-                    System.out.println("Invalid choice. Please enter 1, 2, 3, or 4.\n");
+                    System.out.println("Invalid choice. Please enter a number from 1 to 5.\n");
             }
         }
     }
@@ -154,26 +173,88 @@ public class Main {
             String choice = scanner.nextLine().trim().toLowerCase();
             
             if (choice.equals("n")) {
-                clearScreen(); // Clear out the user prompts if they decline
+                clearScreen(); 
                 break;
             } else if (choice.equals("y")) {
                 String name;
                 while (true) {
                     System.out.print("Name: ");
                     name = scanner.nextLine().trim();
-                    if (!name.isEmpty()) {
-                        break;
+                    if (name.isEmpty()) {
+                        System.out.println("Name cannot be empty. Please try again.");
+                        continue;
                     }
-                    System.out.println("Name cannot be empty. Please try again.");
+
+                    // --- NEW: DUPLICATE USER NAME CHECK ---
+                    boolean exists = false;
+                    for (User u : g.getMembers().values()) {
+                        if (u.getName().equalsIgnoreCase(name)) {
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if (exists) {
+                        System.out.println("Error: A user named '" + name + "' is already in this group. Please use a unique name or initial.");
+                    } else {
+                        break; // Valid, unique name
+                    }
                 }
                 g.addMember(userCount, new User(userCount, name));
-                clearScreen(); // Clear so the success message sits perfectly on top of the menu
+                clearScreen(); 
                 System.out.println("SUCCESS: User '" + name + "' added successfully with ID: " + userCount + "\n");
                 userCount++;
                 break; 
             } else {
                 System.out.println("Invalid input. Please enter 'y' for yes or 'n' for no.");
             }
+        }
+    }
+
+    private static void removeUser(Group g) {
+        System.out.println("--- Current Members ---");
+        if (g.getMembers().isEmpty()) {
+            System.out.println(" (None to remove)\n");
+            return;
+        }
+        g.getMembers().values().forEach(u -> 
+            System.out.printf(" - %s (ID: %d) | Balance: $%.2f%n", u.getName(), u.getId(), u.getNetBalance())
+        );
+        System.out.println("-----------------------\n");
+
+        System.out.print("Enter the ID of the user to remove (or 'b' to cancel): ");
+        String input = scanner.nextLine().trim();
+
+        if (input.equalsIgnoreCase("b")) {
+            clearScreen();
+            return;
+        }
+
+        try {
+            int userId = Integer.parseInt(input);
+            User u = g.getMembers().get(userId);
+
+            if (u == null) {
+                clearScreen();
+                System.out.println("Error: User ID not found in this group.\n");
+                return;
+            }
+
+            if (Math.abs(u.getNetBalance()) > 0.01) {
+                clearScreen();
+                System.out.println("ERROR: Cannot remove " + u.getName() + ".");
+                System.out.println("Their balance is currently $" + String.format("%.2f", u.getNetBalance()) + ".");
+                System.out.println("You must settle all debts involving this user before removing them from the group.\n");
+                return;
+            }
+
+            g.getMembers().remove(userId);
+            clearScreen();
+            System.out.println("SUCCESS: User '" + u.getName() + "' has been removed from the group.\n");
+
+        } catch (NumberFormatException e) {
+            clearScreen();
+            System.out.println("Error: Invalid input. Please enter a numeric ID.\n");
         }
     }
 
@@ -191,7 +272,7 @@ public class Main {
             desc = scanner.nextLine().trim();
             if (desc.equalsIgnoreCase("b")) {
                 clearScreen();
-                return;
+                return; 
             }
             if (!desc.isEmpty()) {
                 break;
@@ -249,7 +330,7 @@ public class Main {
             
             if (input.equalsIgnoreCase("b")) {
                 clearScreen();
-                return;
+                return; 
             }
 
             if (input.isEmpty()) {
@@ -291,7 +372,7 @@ public class Main {
             }
         }
         g.addExpense(ex);
-        clearScreen();
+        clearScreen(); 
         System.out.println("SUCCESS: Expense logged successfully!\n");
     }
 
